@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ContactGallery</string>
+    <string name="galleries">Galleries</string>
+    <string name="addFromContacts">Add From Contacts</string>
 </resources>
