@@ -37,7 +37,7 @@ class GalleriesListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_galleries_list)
         println("aaa")
 
-        floatingActionButton?.also {
+        fabAdd?.also {
             it.setOnClickListener { getContact.launch(null) }
         }
 
