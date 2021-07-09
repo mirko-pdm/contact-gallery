@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -26,12 +25,12 @@ class GalleryActivity : AppCompatActivity() {
 
     private lateinit var currentFile: File
 
-    private val takePicture = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private val fileResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when(result.resultCode) {
             Activity.RESULT_OK -> {}
             Activity.RESULT_CANCELED -> {
-                currentFile?.also {
-                    if(it.exists()) it.delete()
+                currentFile.also {
+                    if(currentFile.exists()) currentFile.delete()
                 }
             }
         }
@@ -42,19 +41,19 @@ class GalleryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_gallery)
 
         fabPhoto.setOnClickListener {
-            currentFile = File.createTempFile("IMG_", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES))
-            val picUri = FileProvider.getUriForFile(this, "pdm.contactgallery.provider", currentFile)
-
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri)
-            takePicture.launch(intent)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, makeNewFile("jpg"))
+            fileResult.launch(intent)
+        }
+
+        fabVideo.setOnClickListener{
+            val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, makeNewFile("mp4"))
+            fileResult.launch(intent)
         }
 
         fabAudio.setOnClickListener{
             Toast.makeText(this, "audio", Toast.LENGTH_SHORT).show()
-        }
-        fabVideo.setOnClickListener{
-            Toast.makeText(this, "video", Toast.LENGTH_SHORT).show()
         }
 
         fabAddToGallery.setOnClickListener{
@@ -73,5 +72,14 @@ class GalleryActivity : AppCompatActivity() {
             fabAddToGallery.startAnimation(if(addClicked) rotateClose else rotateOpen)
             addClicked = !addClicked
         }
+    }
+
+    private fun makeNewFile(extension: String): Uri {
+        currentFile = File.createTempFile(
+            "IMG_",
+            ".$extension",
+            getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+
+        return FileProvider.getUriForFile(this, "pdm.contactgallery.provider", currentFile)
     }
 }

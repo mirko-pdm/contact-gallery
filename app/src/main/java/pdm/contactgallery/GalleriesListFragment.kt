@@ -1,6 +1,5 @@
 package pdm.contactgallery
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -40,10 +39,10 @@ class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
                     0 -> MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog)
                             .setTitle(R.string.deleteGallery)
                             .setMessage(R.string.deleteGalleryConfirm)
-                            .setNeutralButton(R.string.cancel) { dialog, which ->
+                            .setNeutralButton(R.string.cancel) { _, _ ->
                                 Log.i("bbb", "neutral")
                             }
-                            .setPositiveButton(R.string.yesDelete) { dialog, which ->
+                            .setPositiveButton(R.string.yesDelete) { _, _ ->
                                 Log.i("bbb", "positive")
                             }
                             .show()
