@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.Window
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import pdm.contactgallery.galleriesList.GalleriesListActivity
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, GalleriesListActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
+        }, 1500)
 
         setupPermissions()
     }

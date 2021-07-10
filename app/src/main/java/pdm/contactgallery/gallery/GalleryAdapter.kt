@@ -53,8 +53,6 @@ class GalleryAdapter(private val context: Context, private val data: MutableList
             val orientation = ExifInterface(currentFile.absolutePath)
                 .getAttribute(ExifInterface.TAG_ORIENTATION)?.toIntOrNull()
 
-            Log.i("bbb", orientation.toString() + " " + currentFile.extension)
-
             newView.findViewById<ImageView>(R.id.thumbnail).rotation = when(orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> 90f
                 ExifInterface.ORIENTATION_ROTATE_180 -> 180f

@@ -1,21 +1,14 @@
 package pdm.contactgallery.gallery
 
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.ProxyFileDescriptorCallback
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_gallery_grid.*
 import pdm.contactgallery.R
-import pdm.contactgallery.database.Gallery
-import pdm.contactgallery.galleriesList.GalleriesListAdapter
 import java.io.File
 
 class GalleryFragment(
@@ -54,10 +47,26 @@ class GalleryFragment(
 
         // Open gallery options
         MaterialAlertDialogBuilder(requireContext())
-            .setItems(arrayOf(getString(R.string.deleteMediaPrompt, currentFile.name))) { _, which ->
+            .setItems(arrayOf(
+                getString(R.string.share),
+                getString(R.string.deleteMediaPrompt, currentFile.name))) { _, which ->
                 when(which) {
+                    0 -> {
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            putExtra(
+                                Intent.EXTRA_STREAM,
+                                FileProvider.getUriForFile(requireContext(), "pdm.contactgallery.provider", currentFile))
+                            type = when(currentFile.extension) {
+                                "jpg" -> "image/jpg"
+                                "mp4" -> "video/mp4"
+                                else -> "*/*"
+                            }
+                        }
+
+                        startActivity(Intent.createChooser(intent, null))
+                    }
                     // Ask for confirmation
-                    0 -> MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog)
+                    1 -> MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog)
                             .setTitle(R.string.deleteMedia)
                             .setMessage(R.string.deleteMediaConfirm)
                             .setNeutralButton(R.string.cancel, null)

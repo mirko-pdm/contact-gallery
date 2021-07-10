@@ -35,6 +35,14 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return db?.insert(GALLERIES_TABLE, null, values) ?: -1
     }
 
+    fun deleteGallery(id: Long) {
+        writableDatabase.delete(
+            GALLERIES_TABLE,
+            "${BaseColumns._ID} = ?",
+            arrayOf(id.toString())
+        )
+    }
+
     fun listGalleries(): MutableList<Gallery> {
         val db = readableDatabase
 

@@ -13,8 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContactGallery" >
 
-        <activity android:name=".galleriesList.GalleriesListActivity"
-            android:label="@string/myGalleries" >
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.ContactGallery.NoActionBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +24,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".galleriesList.GalleriesListActivity" />
         <activity android:name=".gallery.GalleryActivity" />
 
         <provider

@@ -10,6 +10,7 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -38,17 +39,17 @@ class GalleryActivity() : AppCompatActivity() {
     private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
     private var addClicked = false
 
-    private lateinit var currentFile: File
+    private var currentFile: File? = null
 
     private val fileResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when(result.resultCode) {
             Activity.RESULT_OK -> {
-                makeThumbnail(currentFile)
+                makeThumbnail(currentFile!!)
                 refreshGrid()
             }
             Activity.RESULT_CANCELED -> {
                 currentFile.also {
-                    if(currentFile.exists()) currentFile.delete()
+                    if(currentFile?.exists() == true) currentFile?.delete()
                 }
             }
         }
@@ -56,8 +57,14 @@ class GalleryActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        savedInstanceState?.also {
+            currentFile = File(it.getString("currentFile"))
+        }
+
         setContentView(R.layout.activity_gallery)
         galleryId = intent?.extras?.getLong("galleryId") ?: -1
+        supportActionBar?.title =  intent?.extras?.getString("galleryName") ?: ""
 
         fabPhoto.setOnClickListener {
             fileResult.launch(
@@ -97,15 +104,20 @@ class GalleryActivity() : AppCompatActivity() {
         refreshGrid()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("currentFile", currentFile?.absolutePath)
+    }
+
     private fun makeNewFile(extension: String): Uri {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         currentFile = File.createTempFile(
             "${galleryId}_${timeStamp}_",
             ".$extension",
             getExternalFilesDir(GALLERY_DIR))
-        
 
-        return FileProvider.getUriForFile(this, "pdm.contactgallery.provider", currentFile)
+        return FileProvider.getUriForFile(this, "pdm.contactgallery.provider", currentFile!!)
     }
 
     private fun makeThumbnail(file: File) {

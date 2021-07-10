@@ -35,6 +35,7 @@ class GalleriesListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_galleries_list)
+        supportActionBar?.title = resources.getString(R.string.myGalleries)
 
         fabAdd?.also {
             it.setOnClickListener { getContact.launch(null) }
@@ -53,7 +54,7 @@ class GalleriesListActivity : AppCompatActivity() {
                 if (galleries.size <= 0)
                     Fragment(R.layout.fragment_no_galleries)
                 else
-                    GalleriesListFragment(galleries)
+                    GalleriesListFragment(galleries, ::refreshList)
 
             replace(R.id.galleriesListFragmentContainer, nextFragment)
         }

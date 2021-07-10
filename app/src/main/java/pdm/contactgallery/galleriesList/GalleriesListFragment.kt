@@ -10,14 +10,19 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_galleries_list.*
 import pdm.contactgallery.gallery.GalleryActivity
 import pdm.contactgallery.R
+import pdm.contactgallery.database.DBHelper
 import pdm.contactgallery.database.Gallery
+import java.io.FileFilter
 
-class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
+class GalleriesListFragment(
+    private val galleries: MutableList<Gallery>,
+    private val refreshCallback: () -> Unit
+) :
     Fragment(R.layout.fragment_galleries_list),
     AdapterView.OnItemClickListener,
     AdapterView.OnItemLongClickListener {
 
-    constructor() : this(mutableListOf())
+    constructor() : this(mutableListOf(), {})
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +36,8 @@ class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
         // Open gallery
         startActivity(
             Intent(requireContext(), GalleryActivity::class.java)
-                .putExtra("galleryId", id)
+                .putExtra("galleryId", galleries[position].id)
+                .putExtra("galleryName", galleries[position].name)
         )
     }
 
@@ -48,7 +54,23 @@ class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
                             .setMessage(R.string.deleteGalleryConfirm)
                             .setNeutralButton(R.string.cancel, null)
                             .setPositiveButton(R.string.yesDelete) { _, _ ->
-                                Log.i("bbb", "positive")
+                                DBHelper(requireContext()).deleteGallery(id)
+
+                                val fileFilter = FileFilter { file ->
+                                    file.name.startsWith("${id}_")
+                                }
+
+                                val galleryFiles =
+                                    context?.getExternalFilesDir(GalleryActivity.GALLERY_DIR)?.listFiles(fileFilter)
+                                        ?: arrayOf()
+                                val thumbnailFile =
+                                    context?.getExternalFilesDir(GalleryActivity.THUMBNAILS_DIR)?.listFiles(fileFilter)
+                                        ?: arrayOf()
+
+                                (galleryFiles + thumbnailFile).forEach { file ->
+                                    if(file.exists() and file.isFile) file.delete()
+                                }
+                                refreshCallback()
                             }
                             .show()
                 }

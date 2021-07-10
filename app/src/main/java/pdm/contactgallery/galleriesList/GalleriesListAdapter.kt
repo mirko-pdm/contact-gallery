@@ -12,6 +12,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import pdm.contactgallery.R
 import pdm.contactgallery.database.Gallery
+import pdm.contactgallery.gallery.GalleryActivity
+import java.io.FileFilter
 
 class GalleriesListAdapter(private val context: Context, private val data: MutableList<Gallery>) : BaseAdapter() {
     override fun getCount(): Int {
@@ -35,10 +37,33 @@ class GalleriesListAdapter(private val context: Context, private val data: Mutab
             c.getString(c.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
         }
 
-        newView.findViewById<TextView>(R.id.galleryName).text = data[position].name
+//        val filterAudios = FileFilter { file ->
+//            file.name.startsWith("${data[position].id}_") and
+//                    (file.extension.lowercase() == "jpg")
+//        }
+
+        val location = context.getExternalFilesDir(GalleryActivity.GALLERY_DIR)
+
+        val galleryNameView = newView.findViewById<TextView>(R.id.galleryName)
+        val thumbnailView = newView.findViewById<ImageView>(R.id.thumbnail)
+        val textPhotosView = newView.findViewById<TextView>(R.id.textPhotos)
+        val textVideosView = newView.findViewById<TextView>(R.id.textVideos)
+        val textAudiosView = newView.findViewById<TextView>(R.id.textVideos)
+
+        galleryNameView.text = data[position].name
+
+        textPhotosView.text = location?.listFiles(FileFilter { file ->
+            file.name.startsWith("${data[position].id}_") and
+                    (file.extension.lowercase() == "jpg")
+        })?.size.toString() ?: "0"
+
+        textVideosView.text = location?.listFiles(FileFilter { file ->
+            file.name.startsWith("${data[position].id}_") and
+                    (file.extension.lowercase() == "mp4")
+        })?.size.toString() ?: "0"
 
         thumbnailUri?.also {
-            newView.findViewById<ImageView>(R.id.thumbnail).setImageURI(Uri.parse(it))
+           thumbnailView .setImageURI(Uri.parse(it))
         }
 
         return newView
