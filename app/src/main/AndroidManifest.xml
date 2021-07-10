@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContactGallery" >
 
-        <activity android:name=".GalleryActivity"
+        <activity android:name=".galleriesList.GalleriesListActivity"
             android:label="@string/myGalleries" >
 
             <intent-filter>
@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".gallery.GalleryActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

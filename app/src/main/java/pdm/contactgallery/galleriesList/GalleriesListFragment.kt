@@ -1,13 +1,15 @@
-package pdm.contactgallery
+package pdm.contactgallery.galleriesList
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_galleries_list.*
+import pdm.contactgallery.gallery.GalleryActivity
+import pdm.contactgallery.R
 import pdm.contactgallery.database.Gallery
 
 class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
@@ -20,14 +22,17 @@ class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        galleriesList.adapter = GalleriesAdapter(requireContext(), galleries)
+        galleriesList.adapter = GalleriesListAdapter(requireContext(), galleries)
         galleriesList.onItemClickListener = this
         galleriesList.onItemLongClickListener = this
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        Log.i("bbb",  galleries[position].name)
-        Toast.makeText(activity, galleries[position].name, Toast.LENGTH_SHORT).show()
+        // Open gallery
+        startActivity(
+            Intent(requireContext(), GalleryActivity::class.java)
+                .putExtra("galleryId", id)
+        )
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
@@ -36,12 +41,12 @@ class GalleriesListFragment(private val galleries: MutableList<Gallery>) :
             .setItems(arrayOf(getString(R.string.deleteGalleryPrompt, galleries[position].name))) { _, which ->
                 when(which) {
                     // Ask for confirmation
-                    0 -> MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog)
+                    0 -> MaterialAlertDialogBuilder(requireContext(),
+                        R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog
+                    )
                             .setTitle(R.string.deleteGallery)
                             .setMessage(R.string.deleteGalleryConfirm)
-                            .setNeutralButton(R.string.cancel) { _, _ ->
-                                Log.i("bbb", "neutral")
-                            }
+                            .setNeutralButton(R.string.cancel, null)
                             .setPositiveButton(R.string.yesDelete) { _, _ ->
                                 Log.i("bbb", "positive")
                             }

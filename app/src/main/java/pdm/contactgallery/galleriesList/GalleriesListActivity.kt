@@ -1,15 +1,16 @@
-package pdm.contactgallery
+package pdm.contactgallery.galleriesList
 
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.activity_galleries_list.*
+import pdm.contactgallery.R
 import pdm.contactgallery.database.DBHelper
 
 class GalleriesListActivity : AppCompatActivity() {
@@ -17,10 +18,9 @@ class GalleriesListActivity : AppCompatActivity() {
     * Pick a contact from system's contacts app and create a new gallery with its name
     * */
     private val getContact = registerForActivityResult(ActivityResultContracts.PickContact()) { uri: Uri? ->
-        if(uri != null) {
+        uri?.also { uri ->
             val cursor = contentResolver.query(uri, null, null, null, null)
-
-            val contactName = cursor?.let { c: Cursor ->
+            val contactName = cursor?.let { c ->
                 c.moveToFirst()
                 c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
             }
@@ -35,7 +35,6 @@ class GalleriesListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_galleries_list)
-        println("aaa")
 
         fabAdd?.also {
             it.setOnClickListener { getContact.launch(null) }

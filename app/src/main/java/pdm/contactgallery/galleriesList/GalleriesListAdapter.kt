@@ -1,4 +1,4 @@
-package pdm.contactgallery
+package pdm.contactgallery.galleriesList
 
 import android.content.Context
 import android.database.Cursor
@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import pdm.contactgallery.R
 import pdm.contactgallery.database.Gallery
 
-class GalleriesAdapter(private val context: Context, private val data: MutableList<Gallery>) : BaseAdapter() {
+class GalleriesListAdapter(private val context: Context, private val data: MutableList<Gallery>) : BaseAdapter() {
     override fun getCount(): Int {
         return data.size
     }
@@ -27,7 +28,6 @@ class GalleriesAdapter(private val context: Context, private val data: MutableLi
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_galleries, parent, false)
-
         val cursor = context.contentResolver.query(data[position].uri, null, null, null, null)
 
         val thumbnailUri = cursor?.let { c: Cursor ->
@@ -37,10 +37,8 @@ class GalleriesAdapter(private val context: Context, private val data: MutableLi
 
         newView.findViewById<TextView>(R.id.galleryName).text = data[position].name
 
-        if(thumbnailUri != null) {
-            newView.findViewById<ImageView>(R.id.thumbnail).setImageURI(Uri.parse(thumbnailUri))
-        } else {
-            newView.findViewById<ImageView>(R.id.thumbnail).setImageResource(R.drawable.ic_baseline_person_24)
+        thumbnailUri?.also {
+            newView.findViewById<ImageView>(R.id.thumbnail).setImageURI(Uri.parse(it))
         }
 
         return newView
