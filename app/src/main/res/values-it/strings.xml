@@ -20,4 +20,5 @@
     <string name="tapToStopRecording">Tocca per interrompere</string>
     <string name="go_to_settings">Vai alle impostazioni</string>
     <string name="permissionsMissing">Sembra che l\'app non abbia ancora tutti i permessi necessari per funzionare correttamente. Questa app ha bisogno dei permessi per leggere i tuoi contatti, scrivere sulla memoria e registrare l\'audio dal microfono.\n\nVai alle impostazioni dell\'app per modificare i permessi e riavvia l\'app.</string>
+    <string name="deleted">cancellato</string>
 </resources>

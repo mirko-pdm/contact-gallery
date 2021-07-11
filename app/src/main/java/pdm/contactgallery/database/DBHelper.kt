@@ -45,6 +45,19 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         )
     }
 
+    fun updateGalleryName(id: Long, name: String) {
+        val values = ContentValues().apply {
+            put(COL_NAME, name)
+        }
+
+        writableDatabase.update(
+           GALLERIES_TABLE,
+           values,
+            "${BaseColumns._ID} = ?",
+            arrayOf(id.toString())
+        )
+    }
+
     // Helper for listing galleries
     fun listGalleries(): MutableList<Gallery> {
         val db = readableDatabase

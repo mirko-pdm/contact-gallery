@@ -19,4 +19,5 @@
     <string name="tapToStopRecording">Tap to stop</string>
     <string name="permissionsMissing">It looks like the app is still missing some permissions. In order to work correctly the app needs the permission to read your contacts, write on memory and record audio from the microphone.\n\nPlease go to the app\'s settings and grant all the requested permissions and restart the app.</string>
     <string name="go_to_settings">Go to settings</string>
+    <string name="deleted">deleted</string>
 </resources>
