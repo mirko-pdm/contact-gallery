@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ContactGallery</string>
+    <string name="galleries">Gallerie</string>
+    <string name="addFromContacts">Aggiunti dai contatti</string>
+    <string name="unexpectedError">Errore sconosciutó</string>
+    <string name="noGalleriesHere">Non ci sono ancora gallerie qui. Usa il bottone qui sotto per selezionare un contatto e creare una nuova galleria.</string>
+    <string name="myGalleries">Le mie gallerie</string>
+    <string name="deleteGalleryPrompt">Elimina galleria \"%1$s\"</string>
+    <string name="deleteMediaPrompt">Eliimina \"%1$s\"</string>
+    <string name="yesDelete">Sì, cancella</string>
+    <string name="cancel">Annulla</string>
+    <string name="deleteGallery">Elimina galleria</string>
+    <string name="deleteMedia">Elimina file</string>
+    <string name="deleteGalleryConfirm">Sei sicuro di voler eliminare questa galleria? Tutti i file contenuti al suo interno saranno persi per sempre.</string>
+    <string name="deleteMediaConfirm">Sei sicuro di voler eliminare questo file?</string>
+    <string name="galleryEmpty">Questa galleria è ancora vuota. Clicca sul bottone + per aggiungere foto, video o registrazioni vocali.</string>
+    <string name="share">Condividi</string>
+    <string name="recording">In registrazione...</string>
+    <string name="tapToStopRecording">Tocca per interrompere</string>
+</resources>

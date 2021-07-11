@@ -1,23 +1,14 @@
 package pdm.contactgallery.gallery
 
 import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
-import android.media.ThumbnailUtils
-import android.net.Uri
-import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import pdm.contactgallery.R
-import pdm.contactgallery.database.Gallery
 import java.io.File
 
 class GalleryAdapter(private val context: Context, private val data: MutableList<File>) : BaseAdapter() {
@@ -43,6 +34,7 @@ class GalleryAdapter(private val context: Context, private val data: MutableList
         val view = when(currentFile.extension) {
             "jpg" -> R.layout.item_gallery_photo
             "mp4" -> R.layout.item_gallery_video
+            "3gp" -> R.layout.item_gallery_audio
             else -> R.layout.item_gallery_unknown
         }
         val newView = LayoutInflater.from(context).inflate(view, parent, false)

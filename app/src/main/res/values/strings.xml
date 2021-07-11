@@ -2,9 +2,6 @@
     <string name="app_name">ContactGallery</string>
     <string name="galleries">Galleries</string>
     <string name="addFromContacts">Add From Contacts</string>
-    <string name="title_activity_galleries_list">GalleriesListActivity</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="unexpectedError">Unexpected error</string>
     <string name="noGalleriesHere">There are no galleries here.\nUse the button below to select a contact and create a new gallery.</string>
     <string name="myGalleries">My galleries</string>
@@ -18,4 +15,6 @@
     <string name="deleteMediaConfirm">Are you sure you want to delete this file?</string>
     <string name="galleryEmpty">This gallery is empty. Click on the + button and add photos, videos and voice reordings.</string>
     <string name="share">Share</string>
+    <string name="recording">Recording...</string>
+    <string name="tapToStopRecording">Tap to stop</string>
 </resources>

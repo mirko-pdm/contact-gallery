@@ -2,16 +2,16 @@ package pdm.contactgallery.galleriesList
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_galleries_list.*
-import pdm.contactgallery.gallery.GalleryActivity
 import pdm.contactgallery.R
 import pdm.contactgallery.database.DBHelper
 import pdm.contactgallery.database.Gallery
+import pdm.contactgallery.gallery.GalleryActivity
 import java.io.FileFilter
 
 class GalleriesListFragment(
@@ -21,6 +21,10 @@ class GalleriesListFragment(
     Fragment(R.layout.fragment_galleries_list),
     AdapterView.OnItemClickListener,
     AdapterView.OnItemLongClickListener {
+
+    private val startThenRefresh = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        refreshCallback()
+    }
 
     constructor() : this(mutableListOf(), {})
 
@@ -33,12 +37,10 @@ class GalleriesListFragment(
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // Open gallery
-        startActivity(
-            Intent(requireContext(), GalleryActivity::class.java)
-                .putExtra("galleryId", galleries[position].id)
-                .putExtra("galleryName", galleries[position].name)
-        )
+        // Open gallery and refresh grid when returning
+       startThenRefresh.launch(Intent(requireContext(), GalleryActivity::class.java)
+            .putExtra("galleryId", galleries[position].id)
+            .putExtra("galleryName", galleries[position].name))
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {

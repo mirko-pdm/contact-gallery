@@ -1,24 +1,23 @@
 package pdm.contactgallery.gallery
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.os.PersistableBundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -30,7 +29,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GalleryActivity() : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity() {
     private var galleryId: Long = -1
 
     private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
@@ -40,6 +39,8 @@ class GalleryActivity() : AppCompatActivity() {
     private var addClicked = false
 
     private var currentFile: File? = null
+    private var mediaRecorder = MediaRecorder()
+    private var isRecording = false
 
     private val fileResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when(result.resultCode) {
@@ -59,7 +60,9 @@ class GalleryActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         savedInstanceState?.also {
-            currentFile = File(it.getString("currentFile"))
+            currentFile = it.getString("currentFile")?.let { file ->
+                File(file)
+            }
         }
 
         setContentView(R.layout.activity_gallery)
@@ -81,7 +84,28 @@ class GalleryActivity() : AppCompatActivity() {
         }
 
         fabAudio.setOnClickListener{
-            Toast.makeText(this, "audio", Toast.LENGTH_SHORT).show()
+            val recordPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+
+            if (recordPermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
+            } else {
+                fabAddToGallery.hide()
+                fabAudio.hide()
+                fabPhoto.hide()
+                fabVideo.hide()
+                recordingOverlay.isClickable = true
+                recordingOverlay.visibility = View.VISIBLE
+
+                makeNewFile("3gp")
+
+                isRecording = true
+                mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+                mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                mediaRecorder.setOutputFile(currentFile?.absolutePath)
+                mediaRecorder.prepare()
+                mediaRecorder.start()
+            }
         }
 
         fabAddToGallery.setOnClickListener{
@@ -101,6 +125,22 @@ class GalleryActivity() : AppCompatActivity() {
             addClicked = !addClicked
         }
 
+        recordingOverlay.setOnClickListener{
+            recordingOverlay.isClickable = false
+            recordingOverlay.visibility = View.INVISIBLE
+            fabAddToGallery.show()
+            fabAudio.show()
+            fabPhoto.show()
+            fabVideo.show()
+
+            mediaRecorder.stop()
+            mediaRecorder.release()
+            mediaRecorder = MediaRecorder()
+            isRecording = false
+
+            refreshGrid()
+        }
+
         refreshGrid()
     }
 
@@ -108,6 +148,16 @@ class GalleryActivity() : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         outState.putString("currentFile", currentFile?.absolutePath)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if(isRecording) {
+            mediaRecorder.stop()
+            mediaRecorder.release()
+            mediaRecorder = MediaRecorder()
+        }
     }
 
     private fun makeNewFile(extension: String): Uri {

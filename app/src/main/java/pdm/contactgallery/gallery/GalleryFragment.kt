@@ -32,7 +32,7 @@ class GalleryFragment(
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val currentFile = fileList[position]
         val intent = when(currentFile.extension) {
-            "jpg", "mp4" ->
+            "jpg", "mp4", "3gp" ->
                     Intent(Intent.ACTION_VIEW)
                         .setData(FileProvider.getUriForFile(requireContext(), "pdm.contactgallery.provider", currentFile))
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -59,6 +59,7 @@ class GalleryFragment(
                             type = when(currentFile.extension) {
                                 "jpg" -> "image/jpg"
                                 "mp4" -> "video/mp4"
+                                "3gp" -> "audio/3gp"
                                 else -> "*/*"
                             }
                         }

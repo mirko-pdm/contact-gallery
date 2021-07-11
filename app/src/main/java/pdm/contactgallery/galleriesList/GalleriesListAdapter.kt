@@ -13,7 +13,6 @@ import android.widget.TextView
 import pdm.contactgallery.R
 import pdm.contactgallery.database.Gallery
 import pdm.contactgallery.gallery.GalleryActivity
-import java.io.FileFilter
 
 class GalleriesListAdapter(private val context: Context, private val data: MutableList<Gallery>) : BaseAdapter() {
     override fun getCount(): Int {
@@ -37,30 +36,30 @@ class GalleriesListAdapter(private val context: Context, private val data: Mutab
             c.getString(c.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
         }
 
-//        val filterAudios = FileFilter { file ->
-//            file.name.startsWith("${data[position].id}_") and
-//                    (file.extension.lowercase() == "jpg")
-//        }
-
         val location = context.getExternalFilesDir(GalleryActivity.GALLERY_DIR)
 
         val galleryNameView = newView.findViewById<TextView>(R.id.galleryName)
         val thumbnailView = newView.findViewById<ImageView>(R.id.thumbnail)
         val textPhotosView = newView.findViewById<TextView>(R.id.textPhotos)
         val textVideosView = newView.findViewById<TextView>(R.id.textVideos)
-        val textAudiosView = newView.findViewById<TextView>(R.id.textVideos)
+        val textAudiosView = newView.findViewById<TextView>(R.id.textAudios)
 
         galleryNameView.text = data[position].name
 
-        textPhotosView.text = location?.listFiles(FileFilter { file ->
+        textPhotosView.text = location?.listFiles { file ->
             file.name.startsWith("${data[position].id}_") and
                     (file.extension.lowercase() == "jpg")
-        })?.size.toString() ?: "0"
+        }?.size.toString()
 
-        textVideosView.text = location?.listFiles(FileFilter { file ->
+        textVideosView.text = location?.listFiles { file ->
             file.name.startsWith("${data[position].id}_") and
                     (file.extension.lowercase() == "mp4")
-        })?.size.toString() ?: "0"
+        }?.size.toString()
+
+        textAudiosView.text = location?.listFiles { file ->
+            file.name.startsWith("${data[position].id}_") and
+                    (file.extension.lowercase() == "3gp")
+        }?.size.toString()
 
         thumbnailUri?.also {
            thumbnailView .setImageURI(Uri.parse(it))

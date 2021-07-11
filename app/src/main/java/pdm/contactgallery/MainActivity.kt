@@ -3,11 +3,9 @@ package pdm.contactgallery
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.view.Window
-import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import pdm.contactgallery.galleriesList.GalleriesListActivity
@@ -26,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setupPermissions()
     }
 
+    // TODO permission
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(this,
             Manifest.permission.READ_CONTACTS)
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.READ_CONTACTS),
-                111)
+                122)
         }
     }
 }
