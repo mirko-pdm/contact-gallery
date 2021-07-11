@@ -43,6 +43,7 @@ class GalleryActivity : AppCompatActivity() {
     private var isRecording = false
 
     private val fileResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        // If activity result is OK create a thumbnail, otherwise delete the temporary file
         when(result.resultCode) {
             Activity.RESULT_OK -> {
                 makeThumbnail(currentFile!!)
@@ -59,6 +60,7 @@ class GalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Restore temporary file
         savedInstanceState?.also {
             currentFile = it.getString("currentFile")?.let { file ->
                 File(file)
@@ -69,6 +71,7 @@ class GalleryActivity : AppCompatActivity() {
         galleryId = intent?.extras?.getLong("galleryId") ?: -1
         supportActionBar?.title =  intent?.extras?.getString("galleryName") ?: ""
 
+        // Setup GUI buttons
         fabPhoto.setOnClickListener {
             fileResult.launch(
                 Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -96,6 +99,7 @@ class GalleryActivity : AppCompatActivity() {
                 recordingOverlay.isClickable = true
                 recordingOverlay.visibility = View.VISIBLE
 
+                // Start audio recording
                 makeNewFile("3gp")
 
                 isRecording = true
@@ -133,6 +137,7 @@ class GalleryActivity : AppCompatActivity() {
             fabPhoto.show()
             fabVideo.show()
 
+            // Stop the recording
             mediaRecorder.stop()
             mediaRecorder.release()
             mediaRecorder = MediaRecorder()
@@ -153,6 +158,7 @@ class GalleryActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
+        // Stop the recording when pausing activity
         if(isRecording) {
             mediaRecorder.stop()
             mediaRecorder.release()
@@ -160,6 +166,7 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
+    // Generates a new temporary file
     private fun makeNewFile(extension: String): Uri {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         currentFile = File.createTempFile(
@@ -170,6 +177,7 @@ class GalleryActivity : AppCompatActivity() {
         return FileProvider.getUriForFile(this, "pdm.contactgallery.provider", currentFile!!)
     }
 
+    // Creates a thumbnail for pictures and video files
     private fun makeThumbnail(file: File) {
         val size = resources.getDimension(R.dimen.thumbnail_size).toInt()
 
@@ -193,6 +201,7 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun refreshGrid() {
+        // Find all files in this gallery
         val fileFilter = FileFilter { file ->
             file.name.startsWith("${galleryId}_")
         }

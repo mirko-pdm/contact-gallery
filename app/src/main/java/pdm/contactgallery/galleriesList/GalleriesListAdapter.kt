@@ -46,6 +46,7 @@ class GalleriesListAdapter(private val context: Context, private val data: Mutab
 
         galleryNameView.text = data[position].name
 
+        // Getting number of each kind of media in the gallery
         textPhotosView.text = location?.listFiles { file ->
             file.name.startsWith("${data[position].id}_") and
                     (file.extension.lowercase() == "jpg")

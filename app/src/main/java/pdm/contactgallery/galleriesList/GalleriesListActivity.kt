@@ -14,7 +14,8 @@ import pdm.contactgallery.database.DBHelper
 
 class GalleriesListActivity : AppCompatActivity() {
     /*
-    * Pick a contact from system's contacts app and create a new gallery with its name
+    * Pick a contact from system's contacts app and create
+    * a new gallery with its name
     * */
     private val getContact = registerForActivityResult(ActivityResultContracts.PickContact()) { uri: Uri? ->
         uri?.also { uri ->

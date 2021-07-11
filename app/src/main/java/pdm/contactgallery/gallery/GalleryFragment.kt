@@ -30,6 +30,7 @@ class GalleryFragment(
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        // Open media on click
         val currentFile = fileList[position]
         val intent = when(currentFile.extension) {
             "jpg", "mp4", "3gp" ->
@@ -45,7 +46,7 @@ class GalleryFragment(
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         val currentFile = fileList[position]
 
-        // Open gallery options
+        // Open gallery options (share, delete)
         MaterialAlertDialogBuilder(requireContext())
             .setItems(arrayOf(
                 getString(R.string.share),
@@ -72,6 +73,7 @@ class GalleryFragment(
                             .setMessage(R.string.deleteMediaConfirm)
                             .setNeutralButton(R.string.cancel, null)
                             .setPositiveButton(R.string.yesDelete) { _, _ ->
+                                // Delete file and thumbnail if exists
                                 val thumbnailFile = File(
                                     context?.getExternalFilesDir(GalleryActivity.THUMBNAILS_DIR),
                                     "${currentFile.nameWithoutExtension}.jpg")

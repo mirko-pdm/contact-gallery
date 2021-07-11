@@ -37,8 +37,11 @@ class GalleryAdapter(private val context: Context, private val data: MutableList
             "3gp" -> R.layout.item_gallery_audio
             else -> R.layout.item_gallery_unknown
         }
+
+        //  We can't recycle the view as we have different layouts for each kind of media
         val newView = LayoutInflater.from(context).inflate(view, parent, false)
 
+        // Rotate thumbnails based on image rotation
         BitmapFactory.decodeFile(thumbnailFile.absolutePath)?.also {
             newView.findViewById<ImageView>(R.id.thumbnail).setImageBitmap(it)
 

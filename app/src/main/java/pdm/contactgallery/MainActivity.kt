@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Spash screen, starting the gallery activity after a couple of seconds
         Handler(mainLooper).postDelayed({
             val intent = Intent(this, GalleriesListActivity::class.java)
             startActivity(intent)
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // TODO permission
+    // TODO comments
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(this,
             Manifest.permission.READ_CONTACTS)

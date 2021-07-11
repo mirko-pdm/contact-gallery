@@ -44,7 +44,7 @@ class GalleriesListFragment(
     }
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
-        // Open gallery options
+        // Open gallery options  (delete)
         MaterialAlertDialogBuilder(requireContext())
             .setItems(arrayOf(getString(R.string.deleteGalleryPrompt, galleries[position].name))) { _, which ->
                 when(which) {
@@ -58,6 +58,7 @@ class GalleriesListFragment(
                             .setPositiveButton(R.string.yesDelete) { _, _ ->
                                 DBHelper(requireContext()).deleteGallery(id)
 
+                                // Delete all files and thumbnails for this particular gallery
                                 val fileFilter = FileFilter { file ->
                                     file.name.startsWith("${id}_")
                                 }

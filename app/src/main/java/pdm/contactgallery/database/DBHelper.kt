@@ -21,9 +21,10 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("Not yet implemented")
+        // At the moment there's only version 1
     }
 
+    // Helper for creating a new gallery
     fun createGallery(uri: Uri, name: String): Long {
         val db = writableDatabase
 
@@ -35,6 +36,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return db?.insert(GALLERIES_TABLE, null, values) ?: -1
     }
 
+    // Helper for deleting a gallery
     fun deleteGallery(id: Long) {
         writableDatabase.delete(
             GALLERIES_TABLE,
@@ -43,6 +45,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         )
     }
 
+    // Helper for listing galleries
     fun listGalleries(): MutableList<Gallery> {
         val db = readableDatabase
 
