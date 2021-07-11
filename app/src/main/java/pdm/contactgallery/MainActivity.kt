@@ -2,12 +2,10 @@ package pdm.contactgallery
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import pdm.contactgallery.galleriesList.GalleriesListActivity
 
 class MainActivity : AppCompatActivity() {
@@ -15,26 +13,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Spash screen, starting the gallery activity after a couple of seconds
+        // Splash screen, then check permissions
         Handler(mainLooper).postDelayed({
+            reqPermissions.launch(arrayOf(
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        }, 1500)
+    }
+
+    private val reqPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        if(result.map { it.value }.contains(false)) {
+            // Some permissions are missing, prompt user to grant all permissions
+            val intent = Intent(this, PermissionsActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            // Permissions are ok, go to the galleries activity
             val intent = Intent(this, GalleriesListActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1500)
-
-        setupPermissions()
-    }
-
-    // TODO permission
-    // TODO comments
-    private fun setupPermissions() {
-        val permission = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.READ_CONTACTS)
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                122)
         }
     }
 }

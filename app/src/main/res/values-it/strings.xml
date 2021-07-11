@@ -16,6 +16,8 @@
     <string name="deleteMediaConfirm">Sei sicuro di voler eliminare questo file?</string>
     <string name="galleryEmpty">Questa galleria è ancora vuota. Clicca sul bottone + per aggiungere foto, video o registrazioni vocali.</string>
     <string name="share">Condividi</string>
-    <string name="recording">In registrazione...</string>
+    <string name="recording">In registrazione…</string>
     <string name="tapToStopRecording">Tocca per interrompere</string>
+    <string name="go_to_settings">Vai alle impostazioni</string>
+    <string name="permissionsMissing">Sembra che l\'app non abbia ancora tutti i permessi necessari per funzionare correttamente. Questa app ha bisogno dei permessi per leggere i tuoi contatti, scrivere sulla memoria e registrare l\'audio dal microfono.\n\nVai alle impostazioni dell\'app per modificare i permessi e riavvia l\'app.</string>
 </resources>
